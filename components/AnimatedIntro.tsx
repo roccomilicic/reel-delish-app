@@ -1,6 +1,6 @@
-import {ColorPalette} from '@/constants/Colors';
-import { memo } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { ColorPalette } from "@/constants/Colors";
+import { memo } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import Animated, {
   interpolate,
   interpolateColor,
@@ -10,8 +10,8 @@ import Animated, {
   useSharedValue,
   withDelay,
   withTiming,
-} from 'react-native-reanimated';
-import { ReText } from 'react-native-redash';
+} from "react-native-reanimated";
+import { ReText } from "react-native-redash";
 
 const content = [
   {
@@ -21,22 +21,17 @@ const content = [
   },
   {
     title: "Let's cook.",
-    bg: ColorPalette.brown,
-    fontColor: ColorPalette.sky,
+    bg: ColorPalette.lime,
+    fontColor: ColorPalette.pink,
   },
   {
     title: "Let's eat.",
-    bg: ColorPalette.orange,
-    fontColor: ColorPalette.blue,
+    bg: ColorPalette.lime,
+    fontColor: ColorPalette.pink,
   },
   {
     title: "Let's share.",
-    bg: ColorPalette.teal,
-    fontColor: ColorPalette.yellow,
-  },
-  {
-    title: 'Reel Delish.',
-    bg: ColorPalette.green,
+    bg: ColorPalette.lime,
     fontColor: ColorPalette.pink,
   },
 ];
@@ -65,8 +60,11 @@ const AnimatedIntro = () => {
       color: interpolateColor(
         currentX.value,
         [half, half + labelWidth.value / 2],
-        [content[newColorIndex.value].fontColor, content[currentIndex.value].fontColor],
-        'RGB'
+        [
+          content[newColorIndex.value].fontColor,
+          content[currentIndex.value].fontColor,
+        ],
+        "RGB"
       ),
       transform: [
         {
@@ -85,8 +83,11 @@ const AnimatedIntro = () => {
       backgroundColor: interpolateColor(
         currentX.value,
         [half, half + labelWidth.value / 2],
-        [content[newColorIndex.value].fontColor, content[currentIndex.value].fontColor],
-        'RGB'
+        [
+          content[newColorIndex.value].fontColor,
+          content[currentIndex.value].fontColor,
+        ],
+        "RGB"
       ),
       transform: [{ translateX: currentX.value }],
     };
@@ -98,7 +99,7 @@ const AnimatedIntro = () => {
         currentX.value,
         [half, half + labelWidth.value / 2],
         [content[newColorIndex.value].bg, content[currentIndex.value].bg],
-        'RGB'
+        "RGB"
       ),
       transform: [{ translateX: currentX.value }],
       width: width / 1.5,
@@ -113,12 +114,16 @@ const AnimatedIntro = () => {
       currentX.value,
       [half, half + labelWidth.value / 2],
       [content[newColorIndex.value].bg, content[currentIndex.value].bg],
-      'RGB'
+      "RGB"
     ),
     opacity: interpolate(1, [1, 0], [1, 0, 0, 0, 0, 0, 0]),
     transform: [
       {
-        translateX: interpolate(1, [1, 0], [0, -width * 2, -width, -width, -width, -width, -width]),
+        translateX: interpolate(
+          1,
+          [1, 0],
+          [0, -width * 2, -width, -width, -width, -width, -width]
+        ),
       },
     ],
   }));
@@ -129,52 +134,38 @@ const AnimatedIntro = () => {
   }, [currentIndex]);
 
   useAnimatedReaction(
-    () => labelWidth.value,
-    (newWidth) => {
-      currentX.value = withDelay(
-        1000,
-        withTiming(
-          half + newWidth / 2,
-          {
-            duration: 800,
-          },
-          (finished) => {
-            if (finished) {
-              canGoToNext.value = true;
-              isAtStart.value = false;
-            }
+    () => currentIndex.value,
+    (index) => {
+      const nextIndex = (index + 1) % content.length; // Loop to the start
+      const nextLabelWidth = labelWidth.value + 4; // Adjust for label width
+      
+      // Animate ball and text transitions
+      currentX.value = withTiming(
+        half + nextLabelWidth / 2,
+        { duration: 800 },
+        (finished) => {
+          if (finished) {
+            // Start moving back to the center
+            currentX.value = withDelay(
+              1000,
+              withTiming(
+                half,
+                { duration: 1000 },
+                (centerFinished) => {
+                  if (centerFinished) {
+                    // Update to the next content index
+                    currentIndex.value = nextIndex;
+                  }
+                }
+              )
+            );
           }
-        )
+        }
       );
     },
-    [labelWidth, currentX, half]
+    [labelWidth, half]
   );
-
-  useAnimatedReaction(
-    () => canGoToNext.value,
-    (next) => {
-      if (next) {
-        canGoToNext.value = false;
-        currentX.value = withDelay(
-          1000,
-          withTiming(
-            half,
-            {
-              duration: 800,
-            },
-            (finished) => {
-              if (finished) {
-                currentIndex.value = (currentIndex.value + 1) % content.length;
-                isAtStart.value = true;
-                didPlay.value = false;
-              }
-            }
-          )
-        );
-      }
-    },
-    [currentX, labelWidth]
-  );
+  
 
   return (
     <Animated.View style={[styles.wrapper, style1]}>
@@ -199,27 +190,27 @@ const styles = StyleSheet.create({
   },
   mask: {
     zIndex: 1,
-    position: 'absolute',
-    left: '0%',
+    position: "absolute",
+    left: "0%",
     height: 44,
   },
   ball: {
     width: 40,
     zIndex: 10,
     height: 40,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     borderRadius: 20,
-    position: 'absolute',
-    left: '0%',
+    position: "absolute",
+    left: "0%",
   },
   titleText: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   title: {
     fontSize: 36,
-    fontWeight: '600',
-    left: '0%',
-    position: 'absolute',
+    fontWeight: "600",
+    left: "0%",
+    position: "absolute",
   },
   content: {
     marginTop: 300,

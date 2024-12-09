@@ -21,7 +21,7 @@ const Page = () => {
       if (user) router.replace('/(tabs)')
     } catch (error: any) {
       console.log(error)
-      alert('Sign in failed: ' + error.message);
+      Alert.alert('Sign in failed', 'Enter the correct username and password');
     }
     setLoading(false)
   }
@@ -33,7 +33,7 @@ const Page = () => {
       if (user) router.replace('/(tabs)')
     } catch (error: any) {
       console.log(error)
-      alert('Sign in failed: ' + error.message);
+      Alert.alert('Signup failed', + '' + error.message);
     }
     setLoading(false)
   }
