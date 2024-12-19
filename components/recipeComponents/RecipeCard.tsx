@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 
 interface RecipeCardProps {
   title: string;
@@ -9,16 +9,18 @@ interface RecipeCardProps {
 const RecipeCard: React.FC<RecipeCardProps> = ({ title, image }) => {
   return (
     <View style={styles.cardContainer}>
-      <ImageBackground 
-        source={{ uri: image }} 
-        style={styles.recipeItem} 
-        imageStyle={styles.image}
-        resizeMode="cover"
-      >
-        <View style={styles.overlay}>
-          <Text style={styles.recipeTitle}>{title}</Text>
-        </View>
-      </ImageBackground>
+      <TouchableOpacity onPress={() => { /* Handle touch event here */ }} style={styles.touchable}>
+        <ImageBackground 
+          source={{ uri: image }} 
+          style={styles.recipeItem} 
+          imageStyle={styles.image}
+          resizeMode="cover"
+        >
+          <View style={styles.overlay}>
+            <Text style={styles.recipeTitle}>{title}</Text>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -30,6 +32,9 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderRadius: 8,
     overflow: 'hidden', // Ensure content respects border radius
+  },
+  touchable: {
+    flex: 1,
   },
   recipeItem: {
     flex: 1,
