@@ -20,7 +20,7 @@ const RecipeList = () => {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.container}>
                 {recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} title={recipe.title} image={recipe.image} />
+                    <RecipeCard key={recipe.id} title={recipe.title} image={recipe.image} id={recipe.id} />
                 ))}
             </View>
         </ScrollView>
